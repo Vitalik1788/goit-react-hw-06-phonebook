@@ -4,11 +4,13 @@ import { Container, Title, ContactListTitle } from './App/App.styled';
 import Form from './Form/Form';
 import ContactsList from './Contact__List/Contact__List';
 import Filter from './Filter/Filter';
-import useLocaStorage from 'hooks/useLocalStorage';
+import { useSelector, useDispatch } from 'react-redux';
+import { addUserContact } from 'redux/reducer';
 
 const App = () => {
-  const [contacts, setContacts] = useLocaStorage('contacts');
   const [filter, setFilter] = useState('');
+  const contacts = useSelector(state => state.contacts);
+  const dispatch = useDispatch();
 
   const addContact = ({ name, number }) => {
     const contact = {
@@ -25,13 +27,8 @@ const App = () => {
     ) {
       return alert(`${name} is already in contacts!`);
     }
-    setContacts(prevState => [contact, ...prevState]);
-  };
 
-  const deleteContact = contactId => {
-    setContacts(prevState =>
-      prevState.filter(contact => contact.id !== contactId)
-    );
+    dispatch(addUserContact(contact));
   };
 
   const onFilteredContact = () => {
@@ -55,10 +52,7 @@ const App = () => {
 
       <Filter value={filter} onChange={e => setFilter(e.currentTarget.value)} />
 
-      <ContactsList
-        contacts={filteredContact}
-        onDeleteContact={deleteContact}
-      />
+      <ContactsList contacts={filteredContact} />
     </Container>
   );
 };

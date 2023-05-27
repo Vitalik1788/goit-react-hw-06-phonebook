@@ -1,8 +1,12 @@
 import PropTypes from 'prop-types';
 import { ContactItem, DeleteBtn } from "./Contact__List.styled";
 import { BsFillBookmarkCheckFill } from "react-icons/bs";
+import { removeUserContact } from 'redux/reducer';
+import { useDispatch } from 'react-redux';
 
-const ContactsList = ({ contacts, onDeleteContact } ) => {
+const ContactsList = ({ contacts }) => {
+  const dispatch = useDispatch();
+
   return (
     <ul>
       {contacts && contacts.map(({id, name, number}) => {
@@ -10,7 +14,7 @@ const ContactsList = ({ contacts, onDeleteContact } ) => {
           <ContactItem key={id}>
             <BsFillBookmarkCheckFill style={{ color: "blue", marginRight: "15px"}} />
             {name}: {number}
-            <DeleteBtn type="button" onClick={() => onDeleteContact(id)}>Delete</DeleteBtn>
+            <DeleteBtn type="button" onClick={() => dispatch(removeUserContact(id))}>Delete</DeleteBtn>
           </ContactItem>
         )
       })}
@@ -26,5 +30,4 @@ ContactsList.propTypes = {
     name: PropTypes.string.isRequired,
     number: PropTypes.string.isRequired,
   })),
-  onDeleteContact: PropTypes.func.isRequired,
 }
