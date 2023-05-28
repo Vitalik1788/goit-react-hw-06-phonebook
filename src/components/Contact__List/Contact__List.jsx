@@ -1,43 +1,33 @@
-import PropTypes from 'prop-types';
 import { ContactItem, DeleteBtn } from './Contact__List.styled';
 import { BsFillBookmarkCheckFill } from 'react-icons/bs';
 import { removeUserContact } from 'redux/contactsReducer';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectVisibleContacts } from 'redux/selectors';
 
-const ContactsList = ({ contacts }) => {
+const ContactsList = () => {
   const dispatch = useDispatch();
+  const filteredContacts = useSelector(selectVisibleContacts);
 
   return (
     <ul>
-      {contacts &&
-        contacts.map(({ id, name, number }) => {
-          return (
-            <ContactItem key={id}>
-              <BsFillBookmarkCheckFill
-                style={{ color: 'blue', marginRight: '15px' }}
-              />
-              {name}: {number}
-              <DeleteBtn
-                type="button"
-                onClick={() => dispatch(removeUserContact(id))}
-              >
-                Delete
-              </DeleteBtn>
-            </ContactItem>
-          );
-        })}
+      {filteredContacts.map(({ id, name, number }) => {
+        return (
+          <ContactItem key={id}>
+            <BsFillBookmarkCheckFill
+              style={{ color: 'blue', marginRight: '15px' }}
+            />
+            {name}: {number}
+            <DeleteBtn
+              type="button"
+              onClick={() => dispatch(removeUserContact(id))}
+            >
+              Delete
+            </DeleteBtn>
+          </ContactItem>
+        );
+      })}
     </ul>
   );
 };
 
 export default ContactsList;
-
-ContactsList.propTypes = {
-  contacts: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      number: PropTypes.string.isRequired,
-    })
-  ),
-};
